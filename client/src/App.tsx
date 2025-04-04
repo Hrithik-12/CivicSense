@@ -8,6 +8,7 @@ import BudgetExplorer from "@/pages/BudgetExplorer";
 import KnowYourRights from "@/pages/KnowYourRights";
 import DigitalSecurity from "@/pages/DigitalSecurity";
 import PolicyExplainer from "@/pages/PolicyExplainer";
+import FactChecker from "@/pages/FactChecker";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -19,6 +20,7 @@ function Router() {
         <Route path="/rights" component={KnowYourRights} />
         <Route path="/security" component={DigitalSecurity} />
         <Route path="/policy-explainer" component={PolicyExplainer} />
+        <Route path="/fact-checker" component={FactChecker} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

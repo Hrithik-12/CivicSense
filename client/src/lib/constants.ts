@@ -62,7 +62,7 @@ export const toolItems = [
   },
   {
     title: "Fact Checker",
-    path: "/fact-check",
+    path: "/fact-checker",
     icon: <CheckCircle className="h-5 w-5 mr-2" />
   }
 ];
@@ -98,7 +98,7 @@ export const quickAccessItems = [
     description: "Verify news about government policies",
     icon: <CheckCircle className="h-6 w-6 text-error" />,
     color: "bg-red-100",
-    link: "/fact-check"
+    link: "/fact-checker"
   }
 ];
 
