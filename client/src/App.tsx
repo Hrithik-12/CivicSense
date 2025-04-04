@@ -11,6 +11,7 @@ import PolicyExplainer from "@/pages/PolicyExplainer";
 import FactChecker from "@/pages/FactChecker";
 import PolicyImpactCalculator from "@/pages/PolicyImpactCalculator";
 import LawsAndRegulations from "@/pages/LawsAndRegulations";
+import SchemesAndResponsibilities from "@/pages/SchemesAndResponsibilities";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -25,6 +26,7 @@ function Router() {
         <Route path="/fact-checker" component={FactChecker} />
         <Route path="/impact-calculator" component={PolicyImpactCalculator} />
         <Route path="/laws" component={LawsAndRegulations} />
+        <Route path="/schemes" component={SchemesAndResponsibilities} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>
