@@ -121,8 +121,8 @@ const Sidebar = () => {
               </Link>
             </li>
             <li className="mb-1">
-              <Link href="/fact-check">
-                <a className={navLinkClass("/fact-check")}>
+              <Link href="/fact-checker">
+                <a className={navLinkClass("/fact-checker")}>
                   <CheckCircle className="h-5 w-5 mr-2" />
                   Fact Checker
                 </a>
