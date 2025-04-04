@@ -21,7 +21,7 @@ const KnowYourRights = () => {
   });
 
   const filterRightsByCategory = (category: string) => {
-    if (!rightsCategories) return [];
+    if (!rightsCategories || !Array.isArray(rightsCategories)) return [];
     
     let filtered = [...rightsCategories];
     

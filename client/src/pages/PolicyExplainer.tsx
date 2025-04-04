@@ -157,7 +157,11 @@ const PolicyExplainer = () => {
   const handleCopyToClipboard = () => {
     if (!explanationResult) return;
     
-    const textToCopy = `${explanationResult.summary}\n\n${explanationResult.explanation}\n\nKey Points:\n${explanationResult.keyPoints.map(point => `- ${point}`).join('\n')}`;
+    const keyPointsText = Array.isArray(explanationResult.keyPoints) 
+      ? explanationResult.keyPoints.map(point => `- ${point}`).join('\n')
+      : '';
+    
+    const textToCopy = `${explanationResult.summary}\n\n${explanationResult.explanation}\n\nKey Points:\n${keyPointsText}`;
     
     navigator.clipboard.writeText(textToCopy).then(() => {
       toast({
@@ -365,7 +369,7 @@ const PolicyExplainer = () => {
                   <div className="mb-4">
                     <h5 className="font-medium text-sm mb-2">Key Points:</h5>
                     <ul className="text-sm space-y-2">
-                      {explanationResult.keyPoints.map((point, index) => (
+                      {Array.isArray(explanationResult.keyPoints) && explanationResult.keyPoints.map((point, index) => (
                         <li key={index} className="flex items-start">
                           <CheckCircle className="h-4 w-4 text-primary mr-2 mt-0.5 flex-shrink-0" />
                           <span>{point}</span>
