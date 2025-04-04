@@ -10,6 +10,7 @@ import DigitalSecurity from "@/pages/DigitalSecurity";
 import PolicyExplainer from "@/pages/PolicyExplainer";
 import FactChecker from "@/pages/FactChecker";
 import PolicyImpactCalculator from "@/pages/PolicyImpactCalculator";
+import LawsAndRegulations from "@/pages/LawsAndRegulations";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -23,6 +24,7 @@ function Router() {
         <Route path="/policy-explainer" component={PolicyExplainer} />
         <Route path="/fact-checker" component={FactChecker} />
         <Route path="/impact-calculator" component={PolicyImpactCalculator} />
+        <Route path="/laws" component={LawsAndRegulations} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>
