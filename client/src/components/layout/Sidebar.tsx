@@ -130,8 +130,7 @@ const Sidebar = () => {
         
         <div className="mt-4 text-center">
           <div className="bg-gray-200 p-2 text-xs">
-            <p className="text-gray-700 mb-1">Last updated: April 4, 2025</p>
-            <p className="text-gray-700">Version 1.0.0</p>
+            <p className="text-gray-700">Beta Version</p>
           </div>
         </div>
       </nav>
