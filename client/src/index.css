@@ -8,6 +8,21 @@
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans bg-slate-100 text-foreground;
+  }
+  
+  /* Make the UI look more like a basic government website */
+  .card {
+    @apply shadow-sm !important;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-normal !important;
+  }
+  
+  /* Remove fancy animations and transitions */
+  * {
+    transition: none !important;
+    animation: none !important;
   }
 }

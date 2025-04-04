@@ -10,15 +10,15 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { 
   Search, 
   Upload, 
-  Lightbulb, 
+  FileText, 
   CheckCircle, 
   Share2, 
   Download, 
   Clock, 
-  TrendingUp, 
-  AlertTriangle, 
-  FileText, 
-  FileQuestion 
+  AlertTriangle,
+  FileQuestion,
+  TrendingUp,
+  Info
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Progress } from "@/components/ui/progress";
@@ -180,17 +180,17 @@ const PolicyExplainer = () => {
   return (
     <div className="p-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-2">AI Law & Policy Explainer</h1>
-        <p className="text-neutral-medium">
-          Simplify complex legal documents and government policies into easy-to-understand language
+        <h1 className="text-xl mb-2">Legal Document Analyzer</h1>
+        <p className="text-gray-600 text-sm">
+          Analyze official documents and get basic information in simpler format
         </p>
       </div>
 
       <Card className="mb-8">
         <CardHeader className="pb-2">
-          <CardTitle>Simplify Complex Legal Information</CardTitle>
+          <CardTitle>Understand Legal Documents</CardTitle>
           <CardDescription>
-            Search for a law/policy or upload a document to get a clear, easy-to-understand explanation
+            Find information about laws or upload documents to see them explained in simple terms
           </CardDescription>
         </CardHeader>
 
@@ -335,10 +335,10 @@ const PolicyExplainer = () => {
           {isExplaining && (
             <div className="bg-blue-50 rounded-lg p-4 border border-primary border-opacity-20 mb-4">
               <div className="flex flex-col items-center">
-                <Lightbulb className="h-6 w-6 text-primary animate-pulse mb-2" />
+                <Info className="h-6 w-6 text-primary animate-pulse mb-2" />
                 <p className="text-primary font-medium mb-2">Processing your request...</p>
                 <p className="text-sm text-neutral-medium mb-4">
-                  Our AI is simplifying the legal language for you. This should take a few seconds.
+                  We are analyzing and simplifying the legal language for you. This should take a moment.
                 </p>
                 <Progress value={66} className="w-full max-w-md" />
               </div>
@@ -350,7 +350,7 @@ const PolicyExplainer = () => {
             <div className="bg-blue-50 rounded-lg p-4 border border-primary border-opacity-20">
               <div className="flex items-start">
                 <div className="bg-primary p-2 rounded-lg mr-3 flex-shrink-0">
-                  <Lightbulb className="h-5 w-5 text-white" />
+                  <Info className="h-5 w-5 text-white" />
                 </div>
                 <div className="flex-1">
                   <h4 className="font-medium text-primary mb-1">{explanationResult.summary}</h4>
@@ -405,7 +405,7 @@ const PolicyExplainer = () => {
           <CardHeader>
             <CardTitle>How It Works</CardTitle>
             <CardDescription>
-              Our AI-powered tool breaks down complex legal language
+              Our tool helps understand legal documents more easily
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -424,12 +424,12 @@ const PolicyExplainer = () => {
               
               <div className="flex items-start">
                 <div className="bg-blue-100 p-2 rounded-full mr-3">
-                  <Lightbulb className="h-5 w-5 text-primary" />
+                  <Info className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-medium">AI Processing</h4>
+                  <h4 className="font-medium">Document Analysis</h4>
                   <p className="text-sm text-neutral-medium">
-                    Our advanced AI analyzes and simplifies the legal language
+                    We analyze and break down the complex legal terminology
                   </p>
                 </div>
               </div>

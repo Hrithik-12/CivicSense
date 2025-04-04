@@ -20,80 +20,77 @@ const Sidebar = () => {
   };
 
   const navLinkClass = (path: string) => {
-    return `flex items-center p-2 rounded-lg ${
+    return `flex items-center p-1.5 text-sm ${
       isActive(path)
-        ? "text-primary bg-blue-50"
-        : "text-neutral-medium hover:bg-blue-50 hover:text-primary"
+        ? "text-blue-900 bg-blue-200 font-normal"
+        : "text-gray-700 hover:bg-gray-100"
     }`;
   };
 
   return (
-    <aside className="bg-white shadow-lg lg:w-64 w-full lg:fixed lg:h-full z-10">
-      <div className="p-4 border-b border-neutral-light">
-        <div className="flex items-center space-x-2">
-          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-            <ShieldCheck className="h-6 w-6 text-white" />
-          </div>
-          <h1 className="text-xl font-semibold text-neutral-dark">CivicSense</h1>
+    <aside className="bg-gray-50 border-r border-gray-300 lg:w-56 w-full lg:fixed lg:h-full z-10">
+      <div className="p-3 border-b border-gray-300 bg-blue-100">
+        <div className="flex items-center">
+          <h1 className="text-base text-blue-800">Government Portal</h1>
         </div>
       </div>
       
-      <nav className="p-4">
-        <div className="mb-4">
-          <p className="text-xs uppercase text-neutral-medium mb-2">Main Categories</p>
-          <ul>
-            <li className="mb-1">
+      <nav className="p-2">
+        <div className="mb-3">
+          <p className="text-xs text-gray-500 mb-1 pl-2">MAIN MENU</p>
+          <ul className="border-t border-b border-gray-200 py-1">
+            <li>
               <Link href="/">
                 <a className={navLinkClass("/")}>
-                  <LayoutDashboard className="h-5 w-5 mr-2" />
+                  <LayoutDashboard className="h-4 w-4 mr-2" />
                   Dashboard
                 </a>
               </Link>
             </li>
-            <li className="mb-1">
+            <li>
               <Link href="/budget">
                 <a className={navLinkClass("/budget")}>
-                  <DollarSign className="h-5 w-5 mr-2" />
+                  <DollarSign className="h-4 w-4 mr-2" />
                   Finance & Budget
                 </a>
               </Link>
             </li>
-            <li className="mb-1">
+            <li>
               <Link href="/security">
                 <a className={navLinkClass("/security")}>
-                  <Shield className="h-5 w-5 mr-2" />
+                  <Shield className="h-4 w-4 mr-2" />
                   Digital Security
                 </a>
               </Link>
             </li>
-            <li className="mb-1">
+            <li>
               <Link href="/rights">
                 <a className={navLinkClass("/rights")}>
-                  <ShieldCheck className="h-5 w-5 mr-2" />
+                  <ShieldCheck className="h-4 w-4 mr-2" />
                   Consumer Rights
                 </a>
               </Link>
             </li>
-            <li className="mb-1">
+            <li>
               <Link href="/laws">
                 <a className={navLinkClass("/laws")}>
-                  <Scale className="h-5 w-5 mr-2" />
+                  <Scale className="h-4 w-4 mr-2" />
                   Laws & Regulations
                 </a>
               </Link>
             </li>
-            <li className="mb-1">
+            <li>
               <Link href="/schemes">
                 <a className={navLinkClass("/schemes")}>
-                  <TrendingUp className="h-5 w-5 mr-2" />
+                  <TrendingUp className="h-4 w-4 mr-2" />
                   Schemes
                 </a>
               </Link>
             </li>
-            <li className="mb-1">
+            <li>
               <Link href="/tax">
                 <a className={navLinkClass("/tax")}>
-                  <FileText className="h-5 w-5 mr-2" />
+                  <FileText className="h-4 w-4 mr-2" />
                   Tax Responsibilities
                 </a>
               </Link>
@@ -101,29 +98,29 @@ const Sidebar = () => {
           </ul>
         </div>
         
-        <div className="mb-4">
-          <p className="text-xs uppercase text-neutral-medium mb-2">Tools</p>
-          <ul>
-            <li className="mb-1">
+        <div className="mb-3">
+          <p className="text-xs text-gray-500 mb-1 pl-2">TOOLS</p>
+          <ul className="border-b border-gray-200 py-1">
+            <li>
               <Link href="/policy-explainer">
                 <a className={navLinkClass("/policy-explainer")}>
-                  <Landmark className="h-5 w-5 mr-2" />
-                  AI Policy Explainer
+                  <Landmark className="h-4 w-4 mr-2" />
+                  Policy Explainer
                 </a>
               </Link>
             </li>
-            <li className="mb-1">
+            <li>
               <Link href="/impact-calculator">
                 <a className={navLinkClass("/impact-calculator")}>
-                  <Calculator className="h-5 w-5 mr-2" />
-                  Policy Impact Calculator
+                  <Calculator className="h-4 w-4 mr-2" />
+                  Impact Calculator
                 </a>
               </Link>
             </li>
-            <li className="mb-1">
+            <li>
               <Link href="/fact-checker">
                 <a className={navLinkClass("/fact-checker")}>
-                  <CheckCircle className="h-5 w-5 mr-2" />
+                  <CheckCircle className="h-4 w-4 mr-2" />
                   Fact Checker
                 </a>
               </Link>
@@ -131,11 +128,10 @@ const Sidebar = () => {
           </ul>
         </div>
         
-        <div className="mt-8">
-          <div className="bg-blue-50 rounded-lg p-4">
-            <h3 className="font-medium text-primary mb-2">Need Help?</h3>
-            <p className="text-sm text-neutral-medium mb-3">Have questions about using CivicSense?</p>
-            <button className="bg-primary text-white py-2 px-4 rounded-lg text-sm w-full">Contact Support</button>
+        <div className="mt-4 text-center">
+          <div className="bg-gray-200 p-2 text-xs">
+            <p className="text-gray-700 mb-1">Last updated: April 4, 2025</p>
+            <p className="text-gray-700">Version 1.0.0</p>
           </div>
         </div>
       </nav>
