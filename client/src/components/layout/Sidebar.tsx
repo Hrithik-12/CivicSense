@@ -9,10 +9,17 @@ import {
   TrendingUp, 
   FileText, 
   Calculator, 
-  CheckCircle 
+  CheckCircle,
+  ChevronLeft,
+  Menu
 } from "lucide-react";
 
-const Sidebar = () => {
+interface SidebarProps {
+  isCollapsed: boolean;
+  onCollapse: (collapsed: boolean) => void;
+}
+
+const Sidebar = ({ isCollapsed, onCollapse }: SidebarProps) => {
   const [location] = useLocation();
 
   const isActive = (path: string) => {
@@ -20,117 +27,99 @@ const Sidebar = () => {
   };
 
   const navLinkClass = (path: string) => {
-    return `flex items-center p-1.5 text-sm ${
+    return `flex items-center px-4 py-2.5 text-sm rounded-lg transition-all duration-200 ${
       isActive(path)
-        ? "text-blue-900 bg-blue-200 font-normal"
-        : "text-gray-700 hover:bg-gray-100"
-    }`;
+        ? "text-blue-600 bg-blue-50 font-medium shadow-sm"
+        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+    } ${isCollapsed ? 'justify-center' : ''}`;
   };
 
   return (
-    <aside className="bg-gray-50 border-r border-gray-300 lg:w-56 w-full lg:fixed lg:h-full z-10">
-      <div className="p-3 border-b border-gray-300 bg-blue-100">
-        <div className="flex items-center">
-          <h1 className="text-base text-blue-800">Government Portal</h1>
+    <aside className={`bg-white shadow-lg fixed h-full z-10 transition-all duration-300 ${
+      isCollapsed ? 'w-20' : 'w-64'
+    }`}>
+      <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-blue-100 flex items-center justify-between">
+        <div className={`flex items-center space-x-3 ${isCollapsed ? 'hidden' : ''}`}>
+          <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <Shield className="h-5 w-5 text-white" />
+          </div>
+          <h1 className="text-lg font-semibold text-blue-900">Civic Sense</h1>
         </div>
+        <button
+          onClick={() => onCollapse(!isCollapsed)}
+          className="p-2 rounded-lg hover:bg-blue-100 transition-colors"
+        >
+          {isCollapsed ? (
+            <Menu className="h-5 w-5 text-blue-600" />
+          ) : (
+            <ChevronLeft className="h-5 w-5 text-blue-600" />
+          )}
+        </button>
       </div>
       
-      <nav className="p-2">
-        <div className="mb-3">
-          <p className="text-xs text-gray-500 mb-1 pl-2">MAIN MENU</p>
-          <ul className="border-t border-b border-gray-200 py-1">
-            <li>
-              <Link href="/">
-                <a className={navLinkClass("/")}>
-                  <LayoutDashboard className="h-4 w-4 mr-2" />
-                  Dashboard
-                </a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/budget">
-                <a className={navLinkClass("/budget")}>
-                  <DollarSign className="h-4 w-4 mr-2" />
-                  Finance & Budget
-                </a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/security">
-                <a className={navLinkClass("/security")}>
-                  <Shield className="h-4 w-4 mr-2" />
-                  Digital Security
-                </a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/rights">
-                <a className={navLinkClass("/rights")}>
-                  <ShieldCheck className="h-4 w-4 mr-2" />
-                  Consumer Rights
-                </a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/laws">
-                <a className={navLinkClass("/laws")}>
-                  <Scale className="h-4 w-4 mr-2" />
-                  Laws & Regulations
-                </a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/schemes">
-                <a className={navLinkClass("/schemes")}>
-                  <TrendingUp className="h-4 w-4 mr-2" />
-                  Schemes
-                </a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/tax">
-                <a className={navLinkClass("/tax")}>
-                  <FileText className="h-4 w-4 mr-2" />
-                  Tax Responsibilities
-                </a>
-              </Link>
-            </li>
+      <nav className="p-4">
+        <div className="mb-6">
+          <p className={`text-xs font-medium text-gray-400 mb-3 px-4 uppercase tracking-wider ${
+            isCollapsed ? 'hidden' : ''
+          }`}>
+            Main Menu
+          </p>
+          <ul className="space-y-1">
+            {[
+              { href: "/", icon: <LayoutDashboard className="h-5 w-5" />, label: "Dashboard" },
+              { href: "/budget", icon: <DollarSign className="h-5 w-5" />, label: "Finance & Budget" },
+              { href: "/security", icon: <Shield className="h-5 w-5" />, label: "Digital Security" },
+              { href: "/rights", icon: <ShieldCheck className="h-5 w-5" />, label: "Consumer Rights" },
+              { href: "/laws", icon: <Scale className="h-5 w-5" />, label: "Laws & Regulations" },
+              { href: "/schemes", icon: <TrendingUp className="h-5 w-5" />, label: "Schemes" },
+              { href: "/tax", icon: <FileText className="h-5 w-5" />, label: "Tax Responsibilities" },
+            ].map(item => (
+              <li key={item.href}>
+                <Link href={item.href}>
+                  <a className={navLinkClass(item.href)}>
+                    <span className={isCollapsed ? '' : 'mr-3'}>{item.icon}</span>
+                    {!isCollapsed && <span>{item.label}</span>}
+                  </a>
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
         
-        <div className="mb-3">
-          <p className="text-xs text-gray-500 mb-1 pl-2">TOOLS</p>
-          <ul className="border-b border-gray-200 py-1">
-            <li>
-              <Link href="/policy-explainer">
-                <a className={navLinkClass("/policy-explainer")}>
-                  <Landmark className="h-4 w-4 mr-2" />
-                  Policy Explainer
-                </a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/impact-calculator">
-                <a className={navLinkClass("/impact-calculator")}>
-                  <Calculator className="h-4 w-4 mr-2" />
-                  Impact Calculator
-                </a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/fact-checker">
-                <a className={navLinkClass("/fact-checker")}>
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  Fact Checker
-                </a>
-              </Link>
-            </li>
+        <div className="mb-6">
+          <p className={`text-xs font-medium text-gray-400 mb-3 px-4 uppercase tracking-wider ${
+            isCollapsed ? 'hidden' : ''
+          }`}>
+            Tools
+          </p>
+          <ul className="space-y-1">
+            {[
+              { href: "/policy-explainer", icon: <Landmark className="h-5 w-5" />, label: "Policy Explainer" },
+              { href: "/impact-calculator", icon: <Calculator className="h-5 w-5" />, label: "Impact Calculator" },
+              { href: "/fact-checker", icon: <CheckCircle className="h-5 w-5" />, label: "Fact Checker" },
+            ].map(item => (
+              <li key={item.href}>
+                <Link href={item.href}>
+                  <a className={navLinkClass(item.href)}>
+                    <span className={isCollapsed ? '' : 'mr-3'}>{item.icon}</span>
+                    {!isCollapsed && <span>{item.label}</span>}
+                  </a>
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
         
-        <div className="mt-4 text-center">
-          <div className="bg-gray-200 p-2 text-xs">
-            <p className="text-gray-700">Beta Version</p>
+        <div className={`mt-8 ${isCollapsed ? 'px-2' : ''}`}>
+          <div className={`p-4 rounded-lg bg-gradient-to-r from-blue-50 to-blue-100 ${
+            isCollapsed ? 'text-center' : 'mx-4'
+          }`}>
+            {!isCollapsed && (
+              <>
+                <p className="text-sm font-medium text-blue-800">Beta Version</p>
+                <p className="text-xs text-blue-600 mt-1">Help us improve by providing feedback</p>
+              </>
+            )}
           </div>
         </div>
       </nav>

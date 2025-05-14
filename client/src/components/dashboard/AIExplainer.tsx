@@ -3,7 +3,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Lightbulb, Share2, Download, CheckCircle } from "lucide-react";
+import { Lightbulb, Share2, Download, CheckCircle, Search, Upload, TrendingUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ExplanationResult {
@@ -55,40 +55,66 @@ const AIExplainer = () => {
 
   return (
     <div className="mb-8">
-      <h2 className="text-xl font-semibold mb-4">AI Law & Policy Explainer</h2>
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">AI Law & Policy Explainer</h2>
       
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-medium">Simplify Complex Legal Information</CardTitle>
-          <CardDescription>Upload a document or search for a law to get an easy-to-understand explanation.</CardDescription>
+      <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
+        <CardHeader className="pb-4 border-b border-gray-100">
+          <CardTitle className="text-lg font-semibold text-gray-800">
+            Simplify Complex Legal Information
+          </CardTitle>
+          <CardDescription className="text-gray-600">
+            Upload a document or search for a law to get an easy-to-understand explanation.
+          </CardDescription>
         </CardHeader>
         
-        <CardContent>
-          <div className="bg-neutral-light bg-opacity-20 rounded-lg p-4 mb-6">
-            <div className="flex flex-wrap gap-3">
-              <Button variant="default">Search Laws</Button>
-              <Button variant="outline">Upload Document</Button>
-              <Button variant="outline">Trending Laws</Button>
+        <CardContent className="pt-6">
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6">
+            <div className="flex flex-wrap gap-4">
+              <Button 
+                variant="default"
+                className="bg-blue-600 hover:bg-blue-700 transition-colors flex items-center gap-2"
+              >
+                <Search className="h-4 w-4" />
+                Search Laws
+              </Button>
+              <Button 
+                variant="outline"
+                className="border-blue-200 hover:border-blue-300 hover:bg-blue-50 transition-colors flex items-center gap-2"
+              >
+                <Upload className="h-4 w-4" />
+                Upload Document
+              </Button>
+              <Button 
+                variant="outline"
+                className="border-blue-200 hover:border-blue-300 hover:bg-blue-50 transition-colors flex items-center gap-2"
+              >
+                <TrendingUp className="h-4 w-4" />
+                Trending Laws
+              </Button>
             </div>
           </div>
           
-          <div className="mb-4">
-            <Input
-              type="text"
-              placeholder="Search for a law, policy, or regulation..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-            />
+          <div className="mb-6">
+            <div className="relative">
+              <Input
+                type="text"
+                placeholder="Search for a law, policy, or regulation..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                className="pl-10 py-3 border-gray-200 focus:border-blue-300 focus:ring-blue-100 transition-all"
+              />
+              <Search className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+            </div>
           </div>
           
-          <div className="mb-4">
-            <p className="text-sm text-neutral-medium mb-2">Popular searches:</p>
+          <div className="mb-6">
+            <p className="text-sm font-medium text-gray-600 mb-3">Popular searches:</p>
             <div className="flex flex-wrap gap-2">
               {popularSearches.map((search, index) => (
                 <span 
                   key={index}
-                  className="text-xs bg-blue-50 text-primary px-2 py-1 rounded-full cursor-pointer"
+                  className="text-sm bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full cursor-pointer hover:bg-blue-100 transition-colors duration-200"
                   onClick={() => {
                     setQuery(search);
                     handleSearch();
@@ -101,37 +127,39 @@ const AIExplainer = () => {
           </div>
           
           {isLoading && (
-            <div className="bg-blue-50 rounded-lg p-4 animate-pulse">
-              <div className="h-4 bg-blue-200 rounded w-3/4 mb-2"></div>
-              <div className="h-4 bg-blue-200 rounded w-1/2 mb-2"></div>
-              <div className="h-4 bg-blue-200 rounded w-5/6"></div>
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 animate-pulse">
+              <div className="h-4 bg-blue-200/50 rounded-full w-3/4 mb-3"></div>
+              <div className="h-4 bg-blue-200/50 rounded-full w-1/2 mb-3"></div>
+              <div className="h-4 bg-blue-200/50 rounded-full w-5/6"></div>
             </div>
           )}
           
           {result && (
-            <div className="bg-blue-50 rounded-lg p-4 border border-primary border-opacity-20">
-              <div className="flex items-start">
-                <div className="bg-primary p-2 rounded-lg mr-3">
-                  <Lightbulb className="h-5 w-5 text-white" />
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
+              <div className="flex items-start gap-4">
+                <div className="bg-blue-600 p-3 rounded-xl shadow-lg">
+                  <Lightbulb className="h-6 w-6 text-white" />
                 </div>
-                <div>
-                  <h4 className="font-medium text-primary mb-1">{result.summary}</h4>
-                  <p className="text-sm mb-3">{result.explanation}</p>
-                  <ul className="text-sm space-y-2 mb-3">
+                <div className="flex-1">
+                  <h4 className="text-lg font-semibold text-gray-800 mb-2">{result.summary}</h4>
+                  <p className="text-gray-600 mb-4 leading-relaxed">{result.explanation}</p>
+                  <ul className="space-y-3 mb-6">
                     {result.keyPoints.map((point, index) => (
-                      <li key={index} className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-primary mr-2 mt-0.5" />
-                        {point}
+                      <li key={index} className="flex items-start gap-3 text-gray-700">
+                        <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                        <span>{point}</span>
                       </li>
                     ))}
                   </ul>
-                  <div className="flex justify-between items-center text-sm">
-                    <a href="#" className="text-primary font-medium">Read full explanation</a>
-                    <div className="flex items-center space-x-4">
-                      <button className="text-neutral-medium hover:text-primary">
+                  <div className="flex justify-between items-center pt-4 border-t border-blue-100">
+                    <a href="#" className="text-blue-600 font-medium hover:text-blue-700 transition-colors">
+                      Read full explanation
+                    </a>
+                    <div className="flex items-center gap-4">
+                      <button className="text-gray-400 hover:text-blue-600 transition-colors p-2 hover:bg-blue-50 rounded-full">
                         <Share2 className="h-5 w-5" />
                       </button>
-                      <button className="text-neutral-medium hover:text-primary">
+                      <button className="text-gray-400 hover:text-blue-600 transition-colors p-2 hover:bg-blue-50 rounded-full">
                         <Download className="h-5 w-5" />
                       </button>
                     </div>

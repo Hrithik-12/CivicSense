@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { FileText, DollarSign, Shield, CheckCircle } from "lucide-react";
+import { FileText, IndianRupee, Shield, CheckCircle } from "lucide-react";
 import InfoCard from "../shared/InfoCard";
 
 const QuickAccessSection = () => {
@@ -16,7 +16,7 @@ const QuickAccessSection = () => {
       id: 2,
       title: "Budget Visualizer",
       description: "See how government allocates funds",
-      icon: <DollarSign className="h-6 w-6 text-secondary" />,
+      icon: <IndianRupee className="h-6 w-6 text-secondary" />,
       color: "bg-green-100",
       link: "/budget"
     },
@@ -39,12 +39,12 @@ const QuickAccessSection = () => {
   ];
 
   return (
-    <div className="mb-8">
-      <h2 className="text-xl font-semibold mb-4">Quick Access</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="mb-8 p-4">
+      <h2 className="text-xl font-semibold mb-6">Quick Access</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {quickAccessItems.map((item) => (
           <Link key={item.id} href={item.link}>
-            <a>
+            <a className="transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
               <InfoCard
                 title={item.title}
                 description={item.description}
