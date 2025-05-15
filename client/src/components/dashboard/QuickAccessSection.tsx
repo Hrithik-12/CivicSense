@@ -16,7 +16,7 @@ const QuickAccessSection = () => {
       id: 2,
       title: "Budget Visualizer",
       description: "See how government allocates funds",
-      icon: <IndianRupee className="h-6 w-6 text-secondary" />,
+      icon: <IndianRupee className="h-6 w-6 text-primary" />,
       color: "bg-green-100",
       link: "/budget"
     },
@@ -24,7 +24,7 @@ const QuickAccessSection = () => {
       id: 3,
       title: "Digital Safety",
       description: "Learn about online security best practices",
-      icon: <Shield className="h-6 w-6 text-accent" />,
+      icon: <Shield className="h-6 w-6 text-primary" />,
       color: "bg-amber-100",
       link: "/security"
     },

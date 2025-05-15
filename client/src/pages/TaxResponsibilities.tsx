@@ -515,22 +515,29 @@ const TaxResponsibilities = () => {
 
   // Calculate estimated income tax
   const calculateIncomeTax = (income: number) => {
-    if (income <= 49020) {
-      return income * 0.15;
-    } else if (income <= 98040) {
-      return 49020 * 0.15 + (income - 49020) * 0.205;
-    } else if (income <= 151978) {
-      return 49020 * 0.15 + (98040 - 49020) * 0.205 + (income - 98040) * 0.26;
-    } else if (income <= 216511) {
-      return 49020 * 0.15 + (98040 - 49020) * 0.205 + (151978 - 98040) * 0.26 + (income - 151978) * 0.29;
+    // New Tax Regime (FY 2024-25)
+    if (income <= 300000) {
+      return 0;
+    } else if (income <= 600000) {
+      return (income - 300000) * 0.05;
+    } else if (income <= 900000) {
+      return 15000 + (income - 600000) * 0.10;
+    } else if (income <= 1200000) {
+      return 45000 + (income - 900000) * 0.15;
+    } else if (income <= 1500000) {
+      return 90000 + (income - 1200000) * 0.20;
     } else {
-      return 49020 * 0.15 + (98040 - 49020) * 0.205 + (151978 - 98040) * 0.26 + (216511 - 151978) * 0.29 + (income - 216511) * 0.33;
+      return 150000 + (income - 1500000) * 0.30;
     }
   };
 
   // Formats numbers as currency
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0
+    }).format(amount);
   };
 
   // Format percentage
@@ -821,15 +828,15 @@ const TaxResponsibilities = () => {
                     <Slider
                       id="income"
                       min={0}
-                      max={250000}
-                      step={1000}
+                      max={2500000}
+                      step={10000}
                       value={[incomeLevel]}
                       onValueChange={(value) => setIncomeLevel(value[0])}
                     />
                     <div className="flex justify-between mt-1 text-xs text-neutral-medium">
-                      <span>$0</span>
-                      <span>$125,000</span>
-                      <span>$250,000</span>
+                      <span>₹0</span>
+                      <span>₹1,250,000</span>
+                      <span>₹2,500,000</span>
                     </div>
                   </div>
                   
@@ -861,68 +868,82 @@ const TaxResponsibilities = () => {
                         <div className="flex justify-between items-center">
                           <div className="flex-1">
                             <div className="h-6 bg-blue-200 rounded-sm" style={{ 
-                              width: `${Math.min(100, (Math.min(incomeLevel, 49020) / incomeLevel) * 100)}%` 
+                              width: `${Math.min(100, (Math.min(incomeLevel, 300000) / incomeLevel) * 100)}%` 
+                            }}></div>
+                          </div>
+                          <div className="ml-4 text-sm">
+                            <span className="font-medium">0%: </span>
+                            <span>{formatCurrency(0)}</span>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {incomeLevel > 300000 && (
+                        <div className="flex justify-between items-center">
+                          <div className="flex-1">
+                            <div className="h-6 bg-blue-300 rounded-sm" style={{ 
+                              width: `${Math.min(100, (Math.min(incomeLevel - 300000, 600000 - 300000) / incomeLevel) * 100)}%` 
+                            }}></div>
+                          </div>
+                          <div className="ml-4 text-sm">
+                            <span className="font-medium">5%: </span>
+                            <span>{formatCurrency(Math.min(incomeLevel - 300000, 600000 - 300000) * 0.05)}</span>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {incomeLevel > 600000 && (
+                        <div className="flex justify-between items-center">
+                          <div className="flex-1">
+                            <div className="h-6 bg-blue-400 rounded-sm" style={{ 
+                              width: `${Math.min(100, (Math.min(incomeLevel - 600000, 900000 - 600000) / incomeLevel) * 100)}%` 
+                            }}></div>
+                          </div>
+                          <div className="ml-4 text-sm">
+                            <span className="font-medium">10%: </span>
+                            <span>{formatCurrency(Math.min(incomeLevel - 600000, 900000 - 600000) * 0.10)}</span>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {incomeLevel > 900000 && (
+                        <div className="flex justify-between items-center">
+                          <div className="flex-1">
+                            <div className="h-6 bg-blue-500 rounded-sm" style={{ 
+                              width: `${Math.min(100, (Math.min(incomeLevel - 900000, 1200000 - 900000) / incomeLevel) * 100)}%` 
                             }}></div>
                           </div>
                           <div className="ml-4 text-sm">
                             <span className="font-medium">15%: </span>
-                            <span>{formatCurrency(Math.min(incomeLevel, 49020) * 0.15)}</span>
+                            <span>{formatCurrency(Math.min(incomeLevel - 900000, 1200000 - 900000) * 0.15)}</span>
                           </div>
                         </div>
                       )}
                       
-                      {incomeLevel > 49020 && (
-                        <div className="flex justify-between items-center">
-                          <div className="flex-1">
-                            <div className="h-6 bg-blue-300 rounded-sm" style={{ 
-                              width: `${Math.min(100, (Math.min(incomeLevel - 49020, 98040 - 49020) / incomeLevel) * 100)}%` 
-                            }}></div>
-                          </div>
-                          <div className="ml-4 text-sm">
-                            <span className="font-medium">20.5%: </span>
-                            <span>{formatCurrency(Math.min(incomeLevel - 49020, 98040 - 49020) * 0.205)}</span>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {incomeLevel > 98040 && (
-                        <div className="flex justify-between items-center">
-                          <div className="flex-1">
-                            <div className="h-6 bg-blue-400 rounded-sm" style={{ 
-                              width: `${Math.min(100, (Math.min(incomeLevel - 98040, 151978 - 98040) / incomeLevel) * 100)}%` 
-                            }}></div>
-                          </div>
-                          <div className="ml-4 text-sm">
-                            <span className="font-medium">26%: </span>
-                            <span>{formatCurrency(Math.min(incomeLevel - 98040, 151978 - 98040) * 0.26)}</span>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {incomeLevel > 151978 && (
-                        <div className="flex justify-between items-center">
-                          <div className="flex-1">
-                            <div className="h-6 bg-blue-500 rounded-sm" style={{ 
-                              width: `${Math.min(100, (Math.min(incomeLevel - 151978, 216511 - 151978) / incomeLevel) * 100)}%` 
-                            }}></div>
-                          </div>
-                          <div className="ml-4 text-sm">
-                            <span className="font-medium">29%: </span>
-                            <span>{formatCurrency(Math.min(incomeLevel - 151978, 216511 - 151978) * 0.29)}</span>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {incomeLevel > 216511 && (
+                      {incomeLevel > 1200000 && (
                         <div className="flex justify-between items-center">
                           <div className="flex-1">
                             <div className="h-6 bg-blue-600 rounded-sm" style={{ 
-                              width: `${Math.min(100, ((incomeLevel - 216511) / incomeLevel) * 100)}%` 
+                              width: `${Math.min(100, (Math.min(incomeLevel - 1200000, 1500000 - 1200000) / incomeLevel) * 100)}%` 
                             }}></div>
                           </div>
                           <div className="ml-4 text-sm">
-                            <span className="font-medium">33%: </span>
-                            <span>{formatCurrency((incomeLevel - 216511) * 0.33)}</span>
+                            <span className="font-medium">20%: </span>
+                            <span>{formatCurrency(Math.min(incomeLevel - 1200000, 1500000 - 1200000) * 0.20)}</span>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {incomeLevel > 1500000 && (
+                        <div className="flex justify-between items-center">
+                          <div className="flex-1">
+                            <div className="h-6 bg-blue-700 rounded-sm" style={{ 
+                              width: `${Math.min(100, ((incomeLevel - 1500000) / incomeLevel) * 100)}%` 
+                            }}></div>
+                          </div>
+                          <div className="ml-4 text-sm">
+                            <span className="font-medium">30%: </span>
+                            <span>{formatCurrency((incomeLevel - 1500000) * 0.30)}</span>
                           </div>
                         </div>
                       )}

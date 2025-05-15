@@ -30,6 +30,7 @@ interface ExplanationResult {
   explanation: string;
   summary: string;
   keyPoints: string[];
+  error?: string;
 }
 
 const PolicyExplainer = () => {
@@ -86,13 +87,36 @@ const PolicyExplainer = () => {
 
     setIsExplaining(true);
     try {
-      const res = await apiRequest("POST", "/api/explain-policy", { query });
+      console.log('Sending search request with:', { text: query, type: 'policy' });
+      
+      const res = await apiRequest("POST", "/api/explain-policy", {
+        text: query,  // This is the key field needed by the API
+        type: "policy",
+        language: "en",
+        format: "detailed"
+      });
+      
+      console.log('Response status:', res.status);
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error('API error response:', errorData);
+        throw new Error(errorData.message || 'Failed to get explanation');
+      }
+
       const data = await res.json();
+      console.log('API success response:', data);
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
       setExplanationResult(data);
     } catch (error) {
+      console.error('Search error:', error);
       toast({
         title: "Error",
-        description: "Failed to get explanation. Please try again.",
+        description: error.message || "Failed to get explanation. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -112,13 +136,36 @@ const PolicyExplainer = () => {
 
     setIsExplaining(true);
     try {
-      const res = await apiRequest("POST", "/api/explain-policy", { query: documentText });
+      console.log('Sending document explain request with text length:', documentText.length);
+      
+      const res = await apiRequest("POST", "/api/explain-policy", {
+        text: documentText,  // This is the key field needed by the API
+        type: "document",
+        language: "en",
+        format: "detailed"
+      });
+      
+      console.log('Response status:', res.status);
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error('API error response:', errorData);
+        throw new Error(errorData.message || 'Failed to process document');
+      }
+
       const data = await res.json();
+      console.log('API success response:', data);
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
       setExplanationResult(data);
     } catch (error) {
+      console.error('Document processing error:', error);
       toast({
         title: "Error",
-        description: "Failed to process document. Please try again.",
+        description: error.message || "Failed to process document. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -139,11 +186,28 @@ const PolicyExplainer = () => {
       return;
     }
 
+    // Add file size check
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      toast({
+        title: "File too large",
+        description: "Please upload a file smaller than 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (event) => {
       if (event.target?.result) {
         setDocumentText(event.target.result.toString());
       }
+    };
+    reader.onerror = () => {
+      toast({
+        title: "Error",
+        description: "Failed to read file. Please try again.",
+        variant: "destructive",
+      });
     };
     reader.readAsText(file);
   };

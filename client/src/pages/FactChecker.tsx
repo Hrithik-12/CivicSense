@@ -28,12 +28,13 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface FactCheckResult {
-  id?: number;
+  id: number;
   claim: string;
   analysis: string;
   conclusion: string;
   factRating: "true" | "mostly-true" | "mixed" | "mostly-false" | "false";
   sources: string[];
+  confidence?: number;
 }
 
 const FactChecker = () => {
@@ -89,26 +90,35 @@ const FactChecker = () => {
 
     setIsAnalyzing(true);
     try {
-      const res = await apiRequest("POST", "/api/fact-check", { claim });
+      console.log('Sending fact-check request:', { text: claim });
+      
+      const res = await apiRequest("POST", "/api/fact-check", {
+        text: claim,
+        type: "claim",
+        language: "en",
+        format: "detailed"
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error('API error response:', errorData);
+        throw new Error(errorData.message || 'Failed to analyze claim');
+      }
+
       const data = await res.json();
+      console.log('API success response:', data);
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
       setFactCheckResult(data);
     } catch (error) {
+      console.error('Fact check error:', error);
       toast({
         title: "Error",
-        description: "Failed to analyze claim. Please try again.",
+        description: error.message || "Failed to analyze claim. Please try again.",
         variant: "destructive",
-      });
-      // Fallback result for demonstration
-      setFactCheckResult({
-        claim: claim,
-        analysis: "Our AI analyzed this claim using multiple reliable sources.",
-        conclusion: "This claim contains elements of both truth and misleading information.",
-        factRating: "mixed",
-        sources: [
-          "Government databases",
-          "Academic research papers",
-          "Verified news sources"
-        ]
       });
     } finally {
       setIsAnalyzing(false);
@@ -127,27 +137,35 @@ const FactChecker = () => {
 
     setIsAnalyzing(true);
     try {
-      const res = await apiRequest("POST", "/api/fact-check", { claim: articleText });
+      console.log('Sending article analysis request with length:', articleText.length);
+
+      const res = await apiRequest("POST", "/api/fact-check", {
+        text: articleText,
+        type: "article",
+        language: "en",
+        format: "detailed"
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error('API error response:', errorData);
+        throw new Error(errorData.message || 'Failed to analyze article');
+      }
+
       const data = await res.json();
+      console.log('API success response:', data);
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
       setFactCheckResult(data);
     } catch (error) {
+      console.error('Article analysis error:', error);
       toast({
         title: "Error",
-        description: "Failed to analyze article. Please try again.",
+        description: error.message || "Failed to analyze article. Please try again.",
         variant: "destructive",
-      });
-      // Fallback result for demonstration
-      setFactCheckResult({
-        claim: articleText.substring(0, 100) + "...",
-        analysis: "Our AI analyzed this article using multiple reliable sources and verification methods.",
-        conclusion: "This article contains significant misleading information mixed with some factual content.",
-        factRating: "mostly-false",
-        sources: [
-          "Government databases",
-          "Academic research papers",
-          "Verified news sources",
-          "Historical records"
-        ]
       });
     } finally {
       setIsAnalyzing(false);

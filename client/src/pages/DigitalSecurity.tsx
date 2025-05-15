@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -216,312 +217,379 @@ const DigitalSecurity = () => {
   const networkSecurityTopics = filteredTopics.filter(topic => topic.category === "network");
 
   return (
-    <div className="p-6">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-2">Digital & Cyber Security</h1>
-        <p className="text-neutral-medium">
-          Learn how to protect yourself online and keep your personal data secure
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      {/* Hero Section */}
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+            Digital & Cyber Security
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Learn how to protect yourself online and keep your personal data secure
+          </p>
+        </motion.div>
 
-      {/* Alert Banner */}
-      <Alert className="bg-blue-50 border-l-4 border-primary mb-6">
-        <AlertTriangle className="h-5 w-5 text-primary" />
-        <AlertTitle className="text-primary">Stay Vigilant</AlertTitle>
-        <AlertDescription>
-          Recent increase in phishing attempts targeting banking customers. Verify all communication through official channels.
-        </AlertDescription>
-      </Alert>
+        {/* Alert Banner */}
+        <Alert className="bg-gradient-to-r from-amber-50 to-orange-50 border-l-4 border-amber-500 mb-8">
+          <AlertTriangle className="h-5 w-5 text-amber-600" />
+          <AlertTitle className="text-amber-800">Stay Vigilant</AlertTitle>
+          <AlertDescription className="text-amber-700">
+            Recent increase in phishing attempts targeting banking customers. Verify all communication through official channels.
+          </AlertDescription>
+        </Alert>
 
-      {/* Search bar */}
-      <div className="mb-6">
-        <div className="relative max-w-lg">
-          <Search className="absolute left-3 top-3 h-5 w-5 text-neutral-medium" />
-          <Input
-            type="text"
-            placeholder="Search digital security topics..."
-            className="pl-10"
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-          />
+        {/* Search Bar */}
+        <div className="max-w-2xl mx-auto mb-12">
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 transition-colors group-hover:text-blue-600" />
+            <Input
+              type="text"
+              placeholder="Search digital security topics..."
+              className="w-full pl-12 pr-4 h-12 rounded-full border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500/20 transition-all"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
-      </div>
 
-      {/* Security Categories Tabs */}
-      <Tabs defaultValue="all" className="mb-8">
-        <TabsList>
-          <TabsTrigger value="all">All Topics</TabsTrigger>
-          <TabsTrigger value="personal">Personal Security</TabsTrigger>
-          <TabsTrigger value="device">Device Security</TabsTrigger>
-          <TabsTrigger value="network">Network Security</TabsTrigger>
-        </TabsList>
+        {/* Security Categories Tabs */}
+        <Tabs defaultValue="all" className="mb-8">
+          <TabsList>
+            <TabsTrigger value="all">All Topics</TabsTrigger>
+            <TabsTrigger value="personal">Personal Security</TabsTrigger>
+            <TabsTrigger value="device">Device Security</TabsTrigger>
+            <TabsTrigger value="network">Network Security</TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="all">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {filteredTopics.length > 0 ? (
-              filteredTopics.map(topic => (
-                <Card key={topic.id} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-2">
-                    <div className="flex items-center mb-2">
-                      <div className="bg-blue-50 p-2 rounded-lg mr-3">{topic.icon}</div>
-                      <CardTitle>{topic.title}</CardTitle>
-                    </div>
-                    <CardDescription>{topic.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Accordion type="single" collapsible className="w-full">
-                      {topic.content.map((item, index) => (
-                        <AccordionItem key={index} value={`item-${index}`}>
-                          <AccordionTrigger className="text-sm font-medium">{item.title}</AccordionTrigger>
-                          <AccordionContent className="text-sm text-neutral-medium">
-                            {item.text}
-                          </AccordionContent>
-                        </AccordionItem>
-                      ))}
-                    </Accordion>
-                  </CardContent>
-                  <CardFooter className="flex-col items-start">
-                    <p className="text-sm font-medium mb-2">Quick Tips:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {topic.tips.map((tip, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          <CheckCircle2 className="h-3 w-3 mr-1" /> {tip}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardFooter>
-                </Card>
-              ))
-            ) : (
-              <div className="col-span-3 py-12 text-center text-neutral-medium">
-                No security topics found matching your search query.
-              </div>
-            )}
-          </div>
-        </TabsContent>
+          <TabsContent value="all">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              {filteredTopics.map(topic => (
+                <motion.div
+                  key={topic.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -2 }}
+                >
+                  <Card className="h-full border-none shadow-md hover:shadow-xl transition-all duration-200">
+                    <CardHeader className="pb-2 bg-gradient-to-br from-blue-50 to-cyan-50">
+                      <div className="flex items-center mb-3">
+                        <div className="p-3 rounded-xl mr-4 bg-white/80 shadow-sm">
+                          {topic.icon}
+                        </div>
+                        <CardTitle className="text-xl">{topic.title}</CardTitle>
+                      </div>
+                      <CardDescription>{topic.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Accordion type="single" collapsible className="w-full">
+                        {topic.content.map((item, index) => (
+                          <AccordionItem 
+                            key={index} 
+                            value={`item-${index}`}
+                            className="border-b border-gray-100"
+                          >
+                            <AccordionTrigger className="text-sm font-medium hover:text-blue-600">
+                              {item.title}
+                            </AccordionTrigger>
+                            <AccordionContent className="text-sm text-gray-600">
+                              {item.text}
+                            </AccordionContent>
+                          </AccordionItem>
+                        ))}
+                      </Accordion>
+                    </CardContent>
+                    <CardFooter className="flex-col items-start pt-4 border-t border-gray-100">
+                      <p className="text-sm font-medium mb-3 text-gray-700">Quick Tips:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {topic.tips.map((tip, index) => (
+                          <Badge 
+                            key={index} 
+                            variant="secondary"
+                            className="bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+                          >
+                            <CheckCircle2 className="h-3 w-3 mr-1" /> {tip}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardFooter>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </TabsContent>
 
-        <TabsContent value="personal">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {personalSecurityTopics.length > 0 ? (
-              personalSecurityTopics.map(topic => (
-                <Card key={topic.id} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-2">
-                    <div className="flex items-center mb-2">
-                      <div className="bg-blue-50 p-2 rounded-lg mr-3">{topic.icon}</div>
-                      <CardTitle>{topic.title}</CardTitle>
-                    </div>
-                    <CardDescription>{topic.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Accordion type="single" collapsible className="w-full">
-                      {topic.content.map((item, index) => (
-                        <AccordionItem key={index} value={`item-${index}`}>
-                          <AccordionTrigger className="text-sm font-medium">{item.title}</AccordionTrigger>
-                          <AccordionContent className="text-sm text-neutral-medium">
-                            {item.text}
-                          </AccordionContent>
-                        </AccordionItem>
-                      ))}
-                    </Accordion>
-                  </CardContent>
-                  <CardFooter className="flex-col items-start">
-                    <p className="text-sm font-medium mb-2">Quick Tips:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {topic.tips.map((tip, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          <CheckCircle2 className="h-3 w-3 mr-1" /> {tip}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardFooter>
-                </Card>
-              ))
-            ) : (
-              <div className="col-span-3 py-12 text-center text-neutral-medium">
-                No personal security topics found matching your search query.
-              </div>
-            )}
-          </div>
-        </TabsContent>
+          <TabsContent value="personal">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              {personalSecurityTopics.map(topic => (
+                <motion.div
+                  key={topic.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -2 }}
+                >
+                  <Card className="h-full border-none shadow-md hover:shadow-xl transition-all duration-200">
+                    <CardHeader className="pb-2 bg-gradient-to-br from-blue-50 to-cyan-50">
+                      <div className="flex items-center mb-3">
+                        <div className="p-3 rounded-xl mr-4 bg-white/80 shadow-sm">
+                          {topic.icon}
+                        </div>
+                        <CardTitle className="text-xl">{topic.title}</CardTitle>
+                      </div>
+                      <CardDescription>{topic.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Accordion type="single" collapsible className="w-full">
+                        {topic.content.map((item, index) => (
+                          <AccordionItem 
+                            key={index} 
+                            value={`item-${index}`}
+                            className="border-b border-gray-100"
+                          >
+                            <AccordionTrigger className="text-sm font-medium hover:text-blue-600">
+                              {item.title}
+                            </AccordionTrigger>
+                            <AccordionContent className="text-sm text-gray-600">
+                              {item.text}
+                            </AccordionContent>
+                          </AccordionItem>
+                        ))}
+                      </Accordion>
+                    </CardContent>
+                    <CardFooter className="flex-col items-start pt-4 border-t border-gray-100">
+                      <p className="text-sm font-medium mb-3 text-gray-700">Quick Tips:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {topic.tips.map((tip, index) => (
+                          <Badge 
+                            key={index} 
+                            variant="secondary"
+                            className="bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+                          >
+                            <CheckCircle2 className="h-3 w-3 mr-1" /> {tip}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardFooter>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </TabsContent>
 
-        <TabsContent value="device">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {deviceSecurityTopics.length > 0 ? (
-              deviceSecurityTopics.map(topic => (
-                <Card key={topic.id} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-2">
-                    <div className="flex items-center mb-2">
-                      <div className="bg-blue-50 p-2 rounded-lg mr-3">{topic.icon}</div>
-                      <CardTitle>{topic.title}</CardTitle>
-                    </div>
-                    <CardDescription>{topic.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Accordion type="single" collapsible className="w-full">
-                      {topic.content.map((item, index) => (
-                        <AccordionItem key={index} value={`item-${index}`}>
-                          <AccordionTrigger className="text-sm font-medium">{item.title}</AccordionTrigger>
-                          <AccordionContent className="text-sm text-neutral-medium">
-                            {item.text}
-                          </AccordionContent>
-                        </AccordionItem>
-                      ))}
-                    </Accordion>
-                  </CardContent>
-                  <CardFooter className="flex-col items-start">
-                    <p className="text-sm font-medium mb-2">Quick Tips:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {topic.tips.map((tip, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          <CheckCircle2 className="h-3 w-3 mr-1" /> {tip}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardFooter>
-                </Card>
-              ))
-            ) : (
-              <div className="col-span-3 py-12 text-center text-neutral-medium">
-                No device security topics found matching your search query.
-              </div>
-            )}
-          </div>
-        </TabsContent>
+          <TabsContent value="device">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              {deviceSecurityTopics.map(topic => (
+                <motion.div
+                  key={topic.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -2 }}
+                >
+                  <Card className="h-full border-none shadow-md hover:shadow-xl transition-all duration-200">
+                    <CardHeader className="pb-2 bg-gradient-to-br from-blue-50 to-cyan-50">
+                      <div className="flex items-center mb-3">
+                        <div className="p-3 rounded-xl mr-4 bg-white/80 shadow-sm">
+                          {topic.icon}
+                        </div>
+                        <CardTitle className="text-xl">{topic.title}</CardTitle>
+                      </div>
+                      <CardDescription>{topic.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Accordion type="single" collapsible className="w-full">
+                        {topic.content.map((item, index) => (
+                          <AccordionItem 
+                            key={index} 
+                            value={`item-${index}`}
+                            className="border-b border-gray-100"
+                          >
+                            <AccordionTrigger className="text-sm font-medium hover:text-blue-600">
+                              {item.title}
+                            </AccordionTrigger>
+                            <AccordionContent className="text-sm text-gray-600">
+                              {item.text}
+                            </AccordionContent>
+                          </AccordionItem>
+                        ))}
+                      </Accordion>
+                    </CardContent>
+                    <CardFooter className="flex-col items-start pt-4 border-t border-gray-100">
+                      <p className="text-sm font-medium mb-3 text-gray-700">Quick Tips:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {topic.tips.map((tip, index) => (
+                          <Badge 
+                            key={index} 
+                            variant="secondary"
+                            className="bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+                          >
+                            <CheckCircle2 className="h-3 w-3 mr-1" /> {tip}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardFooter>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </TabsContent>
 
-        <TabsContent value="network">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {networkSecurityTopics.length > 0 ? (
-              networkSecurityTopics.map(topic => (
-                <Card key={topic.id} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-2">
-                    <div className="flex items-center mb-2">
-                      <div className="bg-blue-50 p-2 rounded-lg mr-3">{topic.icon}</div>
-                      <CardTitle>{topic.title}</CardTitle>
-                    </div>
-                    <CardDescription>{topic.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Accordion type="single" collapsible className="w-full">
-                      {topic.content.map((item, index) => (
-                        <AccordionItem key={index} value={`item-${index}`}>
-                          <AccordionTrigger className="text-sm font-medium">{item.title}</AccordionTrigger>
-                          <AccordionContent className="text-sm text-neutral-medium">
-                            {item.text}
-                          </AccordionContent>
-                        </AccordionItem>
-                      ))}
-                    </Accordion>
-                  </CardContent>
-                  <CardFooter className="flex-col items-start">
-                    <p className="text-sm font-medium mb-2">Quick Tips:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {topic.tips.map((tip, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          <CheckCircle2 className="h-3 w-3 mr-1" /> {tip}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardFooter>
-                </Card>
-              ))
-            ) : (
-              <div className="col-span-3 py-12 text-center text-neutral-medium">
-                No network security topics found matching your search query.
-              </div>
-            )}
-          </div>
-        </TabsContent>
-      </Tabs>
+          <TabsContent value="network">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              {networkSecurityTopics.map(topic => (
+                <motion.div
+                  key={topic.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -2 }}
+                >
+                  <Card className="h-full border-none shadow-md hover:shadow-xl transition-all duration-200">
+                    <CardHeader className="pb-2 bg-gradient-to-br from-blue-50 to-cyan-50">
+                      <div className="flex items-center mb-3">
+                        <div className="p-3 rounded-xl mr-4 bg-white/80 shadow-sm">
+                          {topic.icon}
+                        </div>
+                        <CardTitle className="text-xl">{topic.title}</CardTitle>
+                      </div>
+                      <CardDescription>{topic.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Accordion type="single" collapsible className="w-full">
+                        {topic.content.map((item, index) => (
+                          <AccordionItem 
+                            key={index} 
+                            value={`item-${index}`}
+                            className="border-b border-gray-100"
+                          >
+                            <AccordionTrigger className="text-sm font-medium hover:text-blue-600">
+                              {item.title}
+                            </AccordionTrigger>
+                            <AccordionContent className="text-sm text-gray-600">
+                              {item.text}
+                            </AccordionContent>
+                          </AccordionItem>
+                        ))}
+                      </Accordion>
+                    </CardContent>
+                    <CardFooter className="flex-col items-start pt-4 border-t border-gray-100">
+                      <p className="text-sm font-medium mb-3 text-gray-700">Quick Tips:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {topic.tips.map((tip, index) => (
+                          <Badge 
+                            key={index} 
+                            variant="secondary"
+                            className="bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+                          >
+                            <CheckCircle2 className="h-3 w-3 mr-1" /> {tip}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardFooter>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
 
-      {/* Security Assessment */}
-      <div className="mb-8">
-        <Card className="bg-blue-50">
-          <CardHeader>
-            <CardTitle>Security Self-Assessment</CardTitle>
-            <CardDescription>
-              Check your current digital security practices with our quick assessment tool
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button className="w-full sm:w-auto">Take Security Assessment</Button>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Additional Resources */}
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Additional Resources</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
+        {/* Security Assessment Card */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-12"
+        >
+          <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-none">
             <CardHeader>
-              <CardTitle className="text-base">Official Government Resources</CardTitle>
+              <CardTitle className="text-2xl text-blue-800">Security Self-Assessment</CardTitle>
+              <CardDescription className="text-blue-600">
+                Check your current digital security practices with our quick assessment tool
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-3">
-                <li>
-                  <a
-                    href="https://www.cert-in.org.in/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center text-primary hover:underline"
-                  >
-                    <ExternalLink className="h-4 w-4 mr-2" />
-                    CERT-In (Indian Computer Emergency Response Team)
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://cybercrime.gov.in/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center text-primary hover:underline"
-                  >
-                    <ExternalLink className="h-4 w-4 mr-2" />
-                    National Cyber Crime Reporting Portal
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.meity.gov.in/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center text-primary hover:underline"
-                  >
-                    <ExternalLink className="h-4 w-4 mr-2" />
-                    Ministry of Electronics & Information Technology
-                  </a>
-                </li>
-              </ul>
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all">
+                Take Security Assessment
+              </Button>
             </CardContent>
           </Card>
+        </motion.div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Educational Materials</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                <li>
-                  <a href="#" className="flex items-center text-primary hover:underline">
-                    <Laptop className="h-4 w-4 mr-2" />
-                    Online Safety Guide for Children and Parents
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center text-primary hover:underline">
-                    <Smartphone className="h-4 w-4 mr-2" />
-                    Mobile Security Best Practices
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center text-primary hover:underline">
-                    <Shield className="h-4 w-4 mr-2" />
-                    Understanding Data Privacy Rights
-                  </a>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+        {/* Additional Resources Section */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold mb-6 text-center">Additional Resources</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Official Government Resources</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3">
+                  <li>
+                    <a
+                      href="https://www.cert-in.org.in/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-primary hover:underline"
+                    >
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      CERT-In (Indian Computer Emergency Response Team)
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://cybercrime.gov.in/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-primary hover:underline"
+                    >
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      National Cyber Crime Reporting Portal
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://www.meity.gov.in/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-primary hover:underline"
+                    >
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      Ministry of Electronics & Information Technology
+                    </a>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Educational Materials</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3">
+                  <li>
+                    <a href="#" className="flex items-center text-primary hover:underline">
+                      <Laptop className="h-4 w-4 mr-2" />
+                      Online Safety Guide for Children and Parents
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="flex items-center text-primary hover:underline">
+                      <Smartphone className="h-4 w-4 mr-2" />
+                      Mobile Security Best Practices
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="flex items-center text-primary hover:underline">
+                      <Shield className="h-4 w-4 mr-2" />
+                      Understanding Data Privacy Rights
+                    </a>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

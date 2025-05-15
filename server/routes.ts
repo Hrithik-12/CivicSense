@@ -140,40 +140,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // AI Policy Explainer endpoint with Gemini
   apiRouter.post("/explain-policy", async (req, res) => {
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: true, message: 'Method not allowed' });
+    }
+
     try {
-      const { query } = req.body;
-      if (!query) {
-        return res.status(400).json({ message: "Query is required" });
+      console.log('Request body:', req.body); // Debug log
+      
+      const { text, type = 'policy', language = 'en', format = 'detailed' } = req.body;
+      
+      // Input validation - check for required field
+      if (!text) {
+        console.error('Missing required field: text');
+        return res.status(400).json({ 
+          message: 'Query is required',
+          details: "Please provide 'text' in the request body"
+        });
       }
 
-      // Check if we already have an explanation for this query
-      let explanation = await storage.getPolicyExplanationByQuery(query);
-      
-      if (!explanation) {
-        // If not found in storage, use Gemini API to generate one
-        try {
-          const { explainLegalText } = await import('./gemini');
-          explanation = await explainLegalText(query);
-          
-          // Store the generated explanation for future use
-          await storage.createPolicyExplanation({
-            query,
-            explanation: explanation.explanation,
-            summary: explanation.summary,
-            keyPoints: explanation.keyPoints
-          });
-        } catch (aiError) {
-          console.error('Gemini API error:', aiError);
-          
-          // Fallback to mock data if Gemini API fails or is not configured
-          explanation = await storage.getOrCreatePolicyExplanation(query);
+      console.log(`Processing ${type} explanation request for: ${text.substring(0, 50)}...`);
+
+      try {
+        // Generate new explanation using Gemini
+        const { explainLegalText } = await import('./gemini');
+        const explanation = await explainLegalText(text, type, language);
+        
+        // Validate Gemini response
+        if (!explanation?.explanation || !explanation?.summary || !explanation?.keyPoints) {
+          throw new Error('Invalid response from AI model');
         }
+
+        console.log('Successfully generated explanation');
+        
+        // Return response in the exact format expected by the frontend
+        return res.status(200).json({
+          id: explanation.id,
+          query: explanation.query,
+          explanation: explanation.explanation,
+          summary: explanation.summary,
+          keyPoints: explanation.keyPoints
+        });
+
+      } catch (aiError) {
+        console.error('Gemini API error:', aiError);
+        return res.status(500).json({
+          error: true,
+          message: "AI service error",
+          details: aiError instanceof Error ? aiError.message : 'Unknown error'
+        });
       }
-      
-      res.json(explanation);
+
     } catch (error) {
       console.error('Error in explain-policy endpoint:', error);
-      res.status(500).json({ message: "Failed to explain policy" });
+      return res.status(500).json({
+        error: true,
+        message: "Failed to explain policy",
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   });
 
@@ -191,6 +214,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     }
   });
+
+  // Fact-check endpoint
+  apiRouter.post("/fact-check", async (req, res) => {
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: true, message: 'Method not allowed' });
+    }
+
+    try {
+      const { text, type = 'claim', language = 'en' } = req.body;
+      
+      if (!text) {
+        return res.status(400).json({ 
+          error: true,
+          message: "Text content is required"
+        });
+      }
+
+      // Import and use the Gemini service
+      const { explainLegalText } = await import('./gemini');
+      
+      try {
+        const aiResponse = await explainLegalText(text, type);
+        
+        // Transform AI response to FactCheck format
+        const factCheckResult = {
+          id: Date.now(),
+          claim: text.slice(0, 200) + (text.length > 200 ? '...' : ''),
+          analysis: aiResponse.explanation,
+          conclusion: aiResponse.summary,
+          factRating: determineFactRating(aiResponse),
+          sources: aiResponse.keyPoints,
+          confidence: 0.85 // Example confidence score
+        };
+
+        return res.status(200).json(factCheckResult);
+
+      } catch (aiError) {
+        console.error('AI service error:', aiError);
+        return res.status(500).json({
+          error: true,
+          message: "Failed to analyze content",
+          details: aiError.message
+        });
+      }
+
+    } catch (error) {
+      console.error('Error in fact-check endpoint:', error);
+      return res.status(500).json({
+        error: true,
+        message: "Failed to process fact-check request",
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  // Helper function to determine fact rating from AI response
+  function determineFactRating(aiResponse: any): "true" | "mostly-true" | "mixed" | "mostly-false" | "false" {
+    // Implement logic to determine rating based on AI response
+    // This is a simplified example
+    const text = aiResponse.explanation.toLowerCase();
+    
+    if (text.includes('false') || text.includes('incorrect')) return 'false';
+    if (text.includes('misleading') || text.includes('partially false')) return 'mostly-false';
+    if (text.includes('mixed') || text.includes('partially true')) return 'mixed';
+    if (text.includes('mostly true') || text.includes('generally accurate')) return 'mostly-true';
+    if (text.includes('true') || text.includes('accurate')) return 'true';
+    
+    return 'mixed';
+  }
 
   // Register the API router
   app.use("/api", apiRouter);

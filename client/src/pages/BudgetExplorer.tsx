@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
+import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 
-const COLORS = ['#2563EB', '#10B981', '#F59E0B', '#6B7280', '#8B5CF6', '#EC4899'];
+const COLORS = ['#0EA5E9', '#10B981', '#F59E0B', '#6B7280', '#8B5CF6', '#EC4899'];
 
 const BudgetExplorer = () => {
   const [selectedYear, setSelectedYear] = useState("2023-2024");
@@ -17,134 +15,137 @@ const BudgetExplorer = () => {
   });
 
   return (
-    <div className="p-6">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold mb-2">Budget Explorer</h1>
-        <p className="text-neutral-medium">Visualize and understand government spending and budget allocations</p>
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* Minimal Header */}
+      <div className="mb-10 space-y-1">
+        <h1 className="text-3xl font-medium">Budget Explorer</h1>
+        <p className="text-neutral-500 text-sm">Financial Year {selectedYear}</p>
       </div>
       
-      <div className="flex justify-end mb-4">
-        <div className="flex items-center">
-          <span className="mr-2 text-sm">Budget Year:</span>
-          <Select value={selectedYear} onValueChange={setSelectedYear}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select year" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="2023-2024">2023-2024</SelectItem>
-              <SelectItem value="2022-2023">2022-2023</SelectItem>
-              <SelectItem value="2021-2022">2021-2022</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      {/* Clean Year Selector */}
+      <div className="mb-8 flex items-center space-x-4">
+        {["2023-2024", "2022-2023", "2021-2022"].map((year) => (
+          <button
+            key={year}
+            onClick={() => setSelectedYear(year)}
+            className={cn(
+              "px-4 py-2 rounded-full text-sm transition-colors",
+              year === selectedYear 
+                ? "bg-blue-50 text-blue-600" 
+                : "text-neutral-500 hover:text-neutral-800"
+            )}
+          >
+            {year}
+          </button>
+        ))}
       </div>
-      
-      <Tabs value={selectedView} onValueChange={setSelectedView} className="w-full">
-        <TabsList className="mb-6">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="comparison">Year Comparison</TabsTrigger>
-          <TabsTrigger value="details">Detailed Breakdown</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="overview">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle>Sector-wise Budget Allocation</CardTitle>
-                <CardDescription>Breakdown of budget allocation across different sectors</CardDescription>
-              </CardHeader>
-              <CardContent className="h-[400px]">
+
+      {/* Minimal Tabs */}
+      <div className="mb-8 border-b">
+        {["overview", "comparison", "details"].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setSelectedView(tab)}
+            className={cn(
+              "px-6 py-3 text-sm capitalize transition-colors relative",
+              selectedView === tab 
+                ? "text-blue-600" 
+                : "text-neutral-500 hover:text-neutral-800",
+              "after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5",
+              selectedView === tab && "after:bg-blue-600"
+            )}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab Content */}
+      <div className="mt-6">
+        {selectedView === "overview" && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-2 bg-white rounded-xl p-6">
+              <h2 className="text-lg font-medium mb-6">Sector-wise Allocation</h2>
+              <div className="h-[400px]">
                 {isLoading ? (
-                  <div className="h-full w-full flex items-center justify-center">
+                  <div className="h-full flex items-center justify-center">
                     <Skeleton className="h-[350px] w-full rounded" />
                   </div>
-                ) : budgetData && Array.isArray(budgetData) && budgetData.length > 0 ? (
+                ) : budgetData?.length ? (
                   <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
+                    <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                       <Pie
                         data={budgetData}
-                        cx="50%"
+                        cx="35%"
                         cy="50%"
                         labelLine={true}
-                        outerRadius={150}
-                        fill="#8884d8"
+                        outerRadius={120}
+                        fill="#0EA5E9"
                         dataKey="percentage"
                         nameKey="sector"
                         label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                        labelStyle={{ fontSize: '12px' }}
                       >
-                        {budgetData.map((entry: any, index: number) => (
+                        {budgetData.map((_, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(value) => `${value}%`} />
-                      <Legend layout="vertical" verticalAlign="middle" align="right" />
+                      <Tooltip 
+                        contentStyle={{ 
+                          borderRadius: '8px', 
+                          border: 'none', 
+                          boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' 
+                        }}
+                        formatter={(value) => `${value}%`} 
+                      />
+                      <Legend 
+                        verticalAlign="middle" 
+                        align="right" 
+                        layout="vertical"
+                        wrapperStyle={{
+                          paddingLeft: "60px",
+                          right: 20,
+                          fontSize: '12px'
+                        }}
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 ) : (
-                  <div className="h-full w-full flex items-center justify-center text-neutral-medium">
-                    No budget data available for this year
+                  <div className="h-full flex items-center justify-center text-neutral-500">
+                    No data available
                   </div>
                 )}
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Budget Highlights</CardTitle>
-                <CardDescription>Key figures and changes from the budget</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {isLoading ? (
-                  <div className="space-y-4">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Skeleton key={i} className="h-12 w-full" />
-                    ))}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {/* Simplified Budget Cards */}
+              {!isLoading && budgetData?.length ? (
+                <>
+                  <div className="p-6 bg-white rounded-xl">
+                    <div className="text-sm text-neutral-500">Total Budget</div>
+                    <div className="text-2xl font-medium mt-1">₹39.45L Cr</div>
                   </div>
-                ) : budgetData && Array.isArray(budgetData) && budgetData.length > 0 ? (
-                  <div className="space-y-4">
-                    <div className="p-4 bg-primary bg-opacity-10 rounded-lg">
-                      <p className="text-sm text-neutral-medium">Total Budget</p>
-                      <p className="text-xl font-bold text-primary">₹39.45 Lakh Crores</p>
-                    </div>
-                    
-                    <div className="p-4 bg-blue-50 rounded-lg">
-                      <p className="text-sm text-neutral-medium">Fiscal Deficit</p>
-                      <p className="text-lg font-semibold">5.9% of GDP</p>
-                    </div>
-                    
-                    <div className="p-4 bg-green-50 rounded-lg">
-                      <p className="text-sm text-neutral-medium">Capital Expenditure</p>
-                      <p className="text-lg font-semibold">₹11.11 Lakh Crores</p>
-                      <p className="text-xs text-secondary">11.1% increase from last year</p>
-                    </div>
-                    
-                    <div className="p-4 bg-neutral-50 rounded-lg">
-                      <p className="text-sm text-neutral-medium">Revenue Deficit</p>
-                      <p className="text-lg font-semibold">2.9% of GDP</p>
-                    </div>
+                  <div className="p-6 bg-white rounded-xl">
+                    <div className="text-sm text-neutral-500">Fiscal Deficit</div>
+                    <div className="text-2xl font-medium mt-1">5.9%</div>
+                    <div className="text-xs text-neutral-400 mt-1">of GDP</div>
                   </div>
-                ) : (
-                  <div className="h-[350px] flex items-center justify-center text-neutral-medium">
-                    No budget data available for this year
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                </>
+              ) : (
+                <Skeleton className="h-[200px] w-full rounded-xl" />
+              )}
+            </div>
           </div>
-        </TabsContent>
-        
-        <TabsContent value="comparison">
-          <Card>
-            <CardHeader>
-              <CardTitle>Year-on-Year Budget Comparison</CardTitle>
-              <CardDescription>Compare budget allocation across years for each sector</CardDescription>
-            </CardHeader>
-            <CardContent className="h-[500px]">
+        )}
+
+        {selectedView === "comparison" && (
+          <div className="bg-white rounded-xl p-6">
+            <h2 className="text-lg font-medium mb-6">Year-on-Year Comparison</h2>
+            <div className="h-[500px]">
               {isLoading ? (
-                <div className="h-full w-full flex items-center justify-center">
-                  <Skeleton className="h-[450px] w-full rounded" />
-                </div>
-              ) : budgetData && Array.isArray(budgetData) && budgetData.length > 0 ? (
+                <Skeleton className="h-full w-full rounded" />
+              ) : budgetData?.length ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={[
@@ -157,120 +158,71 @@ const BudgetExplorer = () => {
                     ]}
                     margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                     <XAxis dataKey="name" />
-                    <YAxis label={{ value: 'Percentage of Budget (%)', angle: -90, position: 'insideLeft' }} />
-                    <Tooltip />
+                    <YAxis />
+                    <Tooltip 
+                      contentStyle={{ 
+                        borderRadius: '8px', 
+                        border: 'none', 
+                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' 
+                      }} 
+                    />
                     <Legend />
-                    <Bar dataKey="2021-2022" fill="#8884d8" name="2021-2022" />
-                    <Bar dataKey="2022-2023" fill="#82ca9d" name="2022-2023" />
-                    <Bar dataKey="2023-2024" fill="#ffc658" name="2023-2024" />
+                    <Bar dataKey="2021-2022" fill={COLORS[0]} />
+                    <Bar dataKey="2022-2023" fill={COLORS[1]} />
+                    <Bar dataKey="2023-2024" fill={COLORS[2]} />
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="h-full w-full flex items-center justify-center text-neutral-medium">
+                <div className="h-full flex items-center justify-center text-neutral-500">
                   No comparison data available
                 </div>
               )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="details">
-          <Card>
-            <CardHeader>
-              <CardTitle>Detailed Budget Breakdown</CardTitle>
-              <CardDescription>Sub-sector level breakdown of budget allocations</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {isLoading ? (
-                <div className="space-y-4">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Skeleton key={i} className="h-20 w-full" />
-                  ))}
-                </div>
-              ) : budgetData && Array.isArray(budgetData) && budgetData.length > 0 ? (
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="font-semibold mb-2">Education (18%)</h3>
+            </div>
+          </div>
+        )}
+
+        {selectedView === "details" && (
+          <div className="bg-white rounded-xl p-6">
+            <h2 className="text-lg font-medium mb-6">Detailed Breakdown</h2>
+            {isLoading ? (
+              <div className="space-y-4">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <Skeleton key={i} className="h-20 w-full" />
+                ))}
+              </div>
+            ) : budgetData?.length ? (
+              <div className="space-y-8">
+                {/* Simplified sector breakdown */}
+                {['Education', 'Healthcare', 'Infrastructure'].map((sector, i) => (
+                  <div key={sector} className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-medium">{sector}</h3>
+                      <span className="text-sm text-neutral-500">
+                        {[18, 24, 20][i]}%
+                      </span>
+                    </div>
                     <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <p className="text-sm">School Education</p>
-                        <p className="text-sm font-medium">₹68,804 Cr</p>
-                      </div>
-                      <div className="h-2 bg-neutral-100 rounded-full">
-                        <div className="h-2 bg-blue-500 rounded-full" style={{ width: '60%' }}></div>
-                      </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <p className="text-sm">Higher Education</p>
-                        <p className="text-sm font-medium">₹44,094 Cr</p>
-                      </div>
-                      <div className="h-2 bg-neutral-100 rounded-full">
-                        <div className="h-2 bg-blue-500 rounded-full" style={{ width: '40%' }}></div>
+                      {/* Progress bars with minimal styling */}
+                      <div className="h-1 bg-neutral-100 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-blue-500 rounded-full" 
+                          style={{ width: `${[60, 50, 65][i]}%` }} 
+                        />
                       </div>
                     </div>
                   </div>
-                  
-                  <div>
-                    <h3 className="font-semibold mb-2">Healthcare (24%)</h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <p className="text-sm">Public Health Services</p>
-                        <p className="text-sm font-medium">₹41,650 Cr</p>
-                      </div>
-                      <div className="h-2 bg-neutral-100 rounded-full">
-                        <div className="h-2 bg-green-500 rounded-full" style={{ width: '50%' }}></div>
-                      </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <p className="text-sm">Medical Research</p>
-                        <p className="text-sm font-medium">₹8,300 Cr</p>
-                      </div>
-                      <div className="h-2 bg-neutral-100 rounded-full">
-                        <div className="h-2 bg-green-500 rounded-full" style={{ width: '10%' }}></div>
-                      </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <p className="text-sm">Medical Education & Training</p>
-                        <p className="text-sm font-medium">₹33,050 Cr</p>
-                      </div>
-                      <div className="h-2 bg-neutral-100 rounded-full">
-                        <div className="h-2 bg-green-500 rounded-full" style={{ width: '40%' }}></div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="font-semibold mb-2">Infrastructure (20%)</h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <p className="text-sm">Roads & Highways</p>
-                        <p className="text-sm font-medium">₹73,000 Cr</p>
-                      </div>
-                      <div className="h-2 bg-neutral-100 rounded-full">
-                        <div className="h-2 bg-amber-500 rounded-full" style={{ width: '65%' }}></div>
-                      </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <p className="text-sm">Railways</p>
-                        <p className="text-sm font-medium">₹40,000 Cr</p>
-                      </div>
-                      <div className="h-2 bg-neutral-100 rounded-full">
-                        <div className="h-2 bg-amber-500 rounded-full" style={{ width: '35%' }}></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="h-[350px] flex items-center justify-center text-neutral-medium">
-                  No detailed budget data available
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                ))}
+              </div>
+            ) : (
+              <div className="h-[200px] flex items-center justify-center text-neutral-500">
+                No detailed data available
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
