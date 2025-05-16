@@ -13,6 +13,7 @@ import PolicyImpactCalculator from "@/pages/PolicyImpactCalculator";
 import LawsAndRegulations from "@/pages/LawsAndRegulations";
 import SchemesAndResponsibilities from "@/pages/SchemesAndResponsibilities";
 import TaxResponsibilities from "@/pages/TaxResponsibilities";
+import Govt from "@/pages/Govt";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -29,6 +30,7 @@ function Router() {
         <Route path="/laws" component={LawsAndRegulations} />
         <Route path="/schemes" component={SchemesAndResponsibilities} />
         <Route path="/tax" component={TaxResponsibilities} />
+        <Route path="/Govt" component={Govt} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

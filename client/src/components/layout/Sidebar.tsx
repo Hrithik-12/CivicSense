@@ -73,6 +73,7 @@ const Sidebar = ({ isCollapsed, onCollapse }: SidebarProps) => {
               { href: "/laws", icon: <Scale className="h-5 w-5" />, label: "Laws & Regulations" },
               { href: "/schemes", icon: <TrendingUp className="h-5 w-5" />, label: "Schemes" },
               { href: "/tax", icon: <FileText className="h-5 w-5" />, label: "Tax Responsibilities" },
+              { href: "/Govt", icon: <Landmark className="h-5 w-5" />, label: "Govt Data" },
             ].map(item => (
               <li key={item.href}>
                 <Link href={item.href}>
